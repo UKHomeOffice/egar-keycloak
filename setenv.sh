@@ -1,0 +1,18 @@
+export MARIADB_CONTAINER="mariadb"
+export MYSQL_DATABASE="keycloak"
+export MYSQL_PASSWORD="password"
+export MYSQL_USER="keycloak"
+export MYSQL_PORT="3306"
+export KEYCLOAK_CONTAINER="keycloak"
+export KEYCLOAK_PORT="8090"
+export KEYCLOAK_PASSWORD="admin"
+export KEYCLOAK_USER="admin"
+export EGAR_NOTIFICATION_SERVICE_CONTAINER="egar-notification-service"
+
+cat >.docker-compose/keycloak.env <<EOL
+MYSQL_USERNAME=${MYSQL_USER}
+MYSQL_PASSWORD=${MYSQL_PASSWORD}
+MYSQL_PORT_3306_TCP_ADDR=mariadb
+MYSQL_PORT_3306_TCP_PORT=3306
+MYSQL_DATABASE=${MYSQL_DATABASE}
+EOL

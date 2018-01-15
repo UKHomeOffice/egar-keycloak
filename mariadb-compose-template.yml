@@ -1,0 +1,10 @@
+${MARIADB_CONTAINER}:
+  container_name: ${MARIADB_CONTAINER}
+  image: mariadb:10.1.23
+  ports:
+  - "${MYSQL_PORT}:3306"
+  environment:
+    MYSQL_DATABASE: "${MYSQL_DATABASE}"
+    MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    MYSQL_USER: "${MYSQL_USER}"

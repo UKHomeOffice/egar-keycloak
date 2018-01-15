@@ -1,0 +1,29 @@
+${KEYCLOAK_CONTAINER}:
+  container_name: ${KEYCLOAK_CONTAINER}
+  image: quay.io/ukhomeofficedigital/keycloak-mysql:v3.4.0
+  ports:
+  - "${KEYCLOAK_PORT}:8080"
+  external_links:
+  - ${MARIADB_CONTAINER}:mariadb
+  - ${EGAR_NOTIFICATION_SERVICE_CONTAINER}:egar-notification-service
+  volumes:
+  - ./.docker-compose/keycloak.env:/etc/secrets/keycloak.env
+  - ./govuk/:/opt/jboss/keycloak/themes/govuk/
+  - ./govuk-internal/:/opt/jboss/keycloak/themes/govuk-internal/
+  - ./govuk-social-providers/:/opt/jboss/keycloak/themes/govuk-social-providers/
+  - ./govuk-egar/:/opt/jboss/keycloak/themes/govuk-egar/
+  - ./keycloak_db.json:/opt/jboss/keycloak/keycloak_db.json
+  - ./password-blacklists/:/opt/jboss/keycloak/standalone/data/password-blacklists/
+  environment:
+    KEYCLOAK_ENVIRONMENT: "/etc/secrets/keycloak.env"
+    KEYCLOAK_PASSWORD: "${KEYCLOAK_PASSWORD}"
+    KEYCLOAK_USER: "${KEYCLOAK_USER}"
+    MYSQL_PORT_3306_TCP_ADDR: "mariadb"
+    MYSQL_PORT_3306_TCP_PORT: "3306"
+    MYSQL_DATABASE: "${MYSQL_DATABASE}"
+    MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    MYSQL_USERNAME: "${MYSQL_USER}"
+    WAIT_ON_ADDR: "mariadb"
+    WAIT_ON_PORT: "3306"
+  command:
+  - -b 0.0.0.0 --server-config=standalone.xml -Dkeycloak.migration.action=${MIGRATION_ACTION} -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/${DB_FILE} -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
